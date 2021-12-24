@@ -1,0 +1,6 @@
+---
+- name: k8s-control-plane
+  hosts: control_plane
+  become: yes
+  roles:
+    - common

@@ -1,0 +1,17 @@
+# Use auto generated file(vagrant_ansible_inventory) instead of this file.
+
+all:
+  children:
+    control_plane:
+      hosts:
+        control-plane:
+          ansible_host: 192.168.56.161
+          ansible_port: 2222
+    workers:
+      hosts:
+        worker1:
+          ansible_host: 192.168.56.171
+          ansible_port: 2223
+        worker2:
+          ansible_host: 192.168.56.172
+          ansible_port: 2224
