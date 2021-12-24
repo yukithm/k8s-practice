@@ -3,3 +3,19 @@
     upgrade: yes
     update_cache: yes
     cache_valid_time: 86400 # 1 day
+  tags:
+    - packages
+
+- name: install basic tools
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - git
+    - vim
+    - tmux
+    - zsh
+    - curl
+    - wget
+  tags:
+    - packages
