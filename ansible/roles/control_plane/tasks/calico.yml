@@ -1,0 +1,31 @@
+- name: Create Kubernetes network directory
+  file:
+    path: "{{ kubernetes_network_dir }}"
+    state: directory
+
+- name: Copy Calico manifest file
+  template:
+    src: calico.yaml.j2
+    dest: "{{ kubernetes_network_dir }}/calico.yaml"
+
+- name: Check Calico daemonset is working
+  shell: kubectl --kubeconfig={{ kubectl_admin_config }} get ds --all-namespaces | grep calico
+  delegate_to: "{{ groups['control_plane'][0] }}"
+  run_once: true
+  register: check_calico_net
+  failed_when: false
+  changed_when: false
+
+- name: Create Calico network daemonset
+  when: check_calico_net.rc != 0
+  command: kubectl apply --kubeconfig={{ kubectl_admin_config }} -f {{ kubernetes_network_dir }}/calico.yaml
+  delegate_to: "{{ groups['control_plane'][0] }}"
+  run_once: true
+
+- name: Install calicoctl command
+  get_url:
+    url: https://github.com/projectcalico/calicoctl/releases/download/v3.21.2/calicoctl
+    dest: /usr/local/bin/calicoctl
+    owner: root
+    group: root
+    mode: 0755

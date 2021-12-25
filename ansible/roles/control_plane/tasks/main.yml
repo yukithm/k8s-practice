@@ -14,3 +14,79 @@
     - "6443,2379:2380,10250:10252"
   tags:
     - k8s_os_condition
+
+- name: Check if kubelet has already run
+  stat:
+    path: "/etc/kubernetes/pki/ca.key"
+  register: kubelet_ca
+  tags:
+    - k8s_cluster
+
+- name: Run kubeadm init
+  shell: |
+    /usr/bin/kubeadm init \
+      --kubernetes-version={{ kubernetes_version }} \
+      --kubernetes-version={{ kubernetes_version }} \
+      --service-cidr={{ k8s_cluster.service_cidr }} \
+      --pod-network-cidr={{ k8s_cluster.pod_network_cidr }} \
+      --apiserver-advertise-address={{ k8s_cluster.apiserver_advertise_address }}
+  when: not kubelet_ca.stat.exists
+  register: k8s_init_cluster
+  tags:
+    - k8s_cluster
+
+- name: Remove old join_params.json
+  file:
+    path: "{{ kubeadm_join_params_json }}"
+    state: absent
+  when: not kubelet_ca.stat.exists
+  tags:
+    - k8s_cluster
+
+- name: Create Kubernetes config directory
+  file:
+    path: ".kube/"
+    owner: "{{ ansible_user | default(ansible_user_id) }}"
+    group: "{{ ansible_user | default(ansible_user_id) }}"
+    mode: 0755
+    state: directory
+  tags:
+    - k8s_cluster
+
+- name: Copy admin.conf to Home directory
+  when: k8s_init_cluster is succeeded
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: ".kube/config"
+    owner: "{{ ansible_user | default(ansible_user_id) }}"
+    group: "{{ ansible_user | default(ansible_user_id) }}"
+    mode: 0644
+    remote_src: true
+  tags:
+    - k8s_cluster
+
+- name: Setup Calico network
+  import_tasks: calico.yml
+  tags:
+    - k8s_cluster
+
+- name: Configure taint
+  import_tasks: taint.yml
+  tags:
+    - k8s_cluster
+    - taint
+
+- name: Create join params JSON
+  shell: |
+    TOKEN=$(kubeadm token create) \
+    HASH=$( \
+      openssl x509 -pubkey -in {{ kubernetes_config_dir }}/pki/ca.crt \
+        | openssl rsa -pubin -outform der 2>/dev/null \
+        | openssl dgst -sha256 -hex | sed 's/^.* //' \
+    ) \
+    jq --null-input '{token: env.TOKEN, hash: env.HASH}' >{{ kubeadm_join_params_json }}
+  args:
+    creates: "{{ kubeadm_join_params_json }}"
+  tags:
+    - k8s_cluster
+    - join

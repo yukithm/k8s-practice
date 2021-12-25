@@ -1,0 +1,16 @@
+- name: Check master taint
+  shell: |
+    kubectl --kubeconfig={{ kubectl_admin_config }} describe nodes control-plane \
+      | grep node-role.kubernetes.io/master:NoSchedule
+  delegate_to: "{{ groups['control_plane'][0] }}"
+  run_once: true
+  register: check_master_taint
+  failed_when: false
+  changed_when: false
+  when: k8s_cluster.remove_master_taint
+
+- name: Remove master taint
+  when: k8s_cluster.remove_master_taint and check_master_taint.rc == 0
+  command: kubectl --kubeconfig={{ kubectl_admin_config }} taint nodes --all node-role.kubernetes.io/master-
+  delegate_to: "{{ groups['control_plane'][0] }}"
+  run_once: true

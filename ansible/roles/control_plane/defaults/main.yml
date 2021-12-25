@@ -1,0 +1,9 @@
+kubernetes_config_dir: /etc/kubernetes
+kubectl_admin_config: "{{ kubernetes_config_dir }}/admin.conf"
+kubernetes_network_dir: "{{ kubernetes_config_dir }}/network"
+
+k8s_cluster:
+  service_cidr: 10.96.0.0/12
+  pod_network_cidr: 10.224.0.0/16
+  apiserver_advertise_address: 192.168.56.161
+  remove_master_taint: false

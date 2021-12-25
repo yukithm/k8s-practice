@@ -1,3 +1,7 @@
+vagrant_shared_dir: /vagrant
+vm_shared_dir: "{{ vagrant_shared_dir }}/shared"
+
+
 timezone: Asia/Tokyo
 
 # geerlingguy.docker
@@ -11,3 +15,9 @@ docker_daemon_options:
   storage-driver: "overlay2"
 docker_users:
   - vagrant
+
+kubernetes_version: 1.21.8
+kubernetes_package_version: 1.21.8-00
+
+kubeadm_join_params_json: "{{ vm_shared_dir }}/kubeadm-join-params.json"
+control_plane_address: 192.168.56.161

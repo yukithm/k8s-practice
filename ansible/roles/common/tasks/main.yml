@@ -15,6 +15,7 @@
       - zsh
       - curl
       - wget
+      - jq
     state: present
   tags:
     - packages
@@ -27,3 +28,8 @@
 - name: Set timezone
   timezone:
     name: "{{ timezone }}"
+
+- name: Create shared directory
+  file:
+    path: "{{ vm_shared_dir }}"
+    state: directory

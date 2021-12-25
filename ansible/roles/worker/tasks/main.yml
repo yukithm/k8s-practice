@@ -11,3 +11,37 @@
     - "10250,30000:32767"
   tags:
     - k8s_os_condition
+
+- name: Check if kubelet has already run
+  stat:
+    path: "/etc/kubernetes/pki/ca.crt"
+  register: kubelet_ca
+  tags:
+    - k8s_cluster
+
+- name: Wait until the file {{ kubeadm_join_params_json }} is present
+  wait_for:
+    path: "{{ kubeadm_join_params_json }}"
+  when: not kubelet_ca.stat.exists
+  tags:
+    - k8s_cluster
+
+- name: Load join parameters
+  command: cat {{ kubeadm_join_params_json }}
+  register: join_params_json
+  when: not kubelet_ca.stat.exists
+  tags:
+    - k8s_cluster
+
+- name: Set join parameters
+  set_fact:
+    join_params: "{{ join_params_json.stdout | from_json }}"
+  when: not kubelet_ca.stat.exists
+  tags:
+    - k8s_cluster
+
+- name: Join Kubernetes cluster
+  command: kubeadm join --token={{ join_params.token }} {{ control_plane_address }}:6443 --discovery-token-ca-cert-hash sha256:{{ join_params.hash }}
+  when: not kubelet_ca.stat.exists
+  tags:
+    - k8s_cluster

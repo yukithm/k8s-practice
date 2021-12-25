@@ -4,3 +4,50 @@
   import_tasks: prepare.yml
   tags:
     - k8s_os_condition
+
+- name: Add Google Cloud Packages apt key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+  tags:
+    - kubeadm
+
+- name: Add Kubernetes apt repository
+  apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+  tags:
+    - kubeadm
+
+- name: Install kubelet, kubeadm and kubectl 
+  apt:
+    name:
+      - "kubelet={{ kubernetes_package_version }}"
+      - "kubeadm={{ kubernetes_package_version }}"
+      - "kubectl={{ kubernetes_package_version }}"
+  tags:
+    - kubeadm
+
+- name: Hold kubelet, kubeadm and kubectl packages
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  with_items:
+    - kubelet
+    - kubeadm
+    - kubectl
+  tags:
+    - kubeadm
+
+- name: Check if kubectl completion file exists
+  stat:
+    path: /etc/bash_completion.d/kubectl
+  register: kubectl_completion
+  tags:
+    - kubeadm
+
+- name: Create kubectl completion
+  shell: "kubectl completion bash >/etc/bash_completion.d/kubectl"
+  when: not kubectl_completion.stat.exists
+  tags:
+    - kubeadm

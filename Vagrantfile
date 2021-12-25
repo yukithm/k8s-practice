@@ -1,6 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# number of worker nodes
+NUM_OF_WORKERS = 2
+
 Vagrant.configure("2") do |config|
   config.vagrant.plugins = ["vagrant-vbguest"]
 
@@ -16,13 +19,25 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  (1..NUM_OF_WORKERS).each do |worker_id|
+    config.vm.define "worker#{worker_id}" do |worker|
+      worker.vm.hostname = "worker#{worker_id}"
+      worker.vm.network "private_network", ip: "192.168.56.#{170 + worker_id}"
+      worker.vm.provider "virtualbox" do |vb|
+        vb.gui = false
+        vb.cpus = 1
+        vb.memory = 2048
+      end
+    end
+  end
+
   config.vm.provision "ansible" do |ansible|
     ansible.verbose = "v"
     ansible.config_file = "./ansible/ansible.cfg"
     ansible.playbook = "./ansible/site.yml"
     ansible.groups = {
       "control_plane" => ["control-plane"],
-      "workers" => ["worker1", "worker2"]
+      "workers" => (1..NUM_OF_WORKERS).map {|id| "worker#{id}"}
     }
   end
 end

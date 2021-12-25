@@ -2,6 +2,7 @@
 
 - name: Disable swap
   command: swapoff -a
+  changed_when: False
 
 - name: Disable swap in fstab
   replace:
