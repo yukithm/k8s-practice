@@ -8,15 +8,14 @@
 
 - name: Install basic tools
   apt:
-    name: "{{ item }}"
+    name:
+      - git
+      - vim
+      - tmux
+      - zsh
+      - curl
+      - wget
     state: present
-  with_items:
-    - git
-    - vim
-    - tmux
-    - zsh
-    - curl
-    - wget
   tags:
     - packages
 
