@@ -5,3 +5,5 @@
   roles:
     - common
     - geerlingguy.docker
+    - kubeadm
+    - worker

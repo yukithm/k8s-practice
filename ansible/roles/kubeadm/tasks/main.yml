@@ -1,0 +1,6 @@
+# https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+
+- name: Prepare OS conditions for kubeadm
+  import_tasks: prepare.yml
+  tags:
+    - k8s_os_condition

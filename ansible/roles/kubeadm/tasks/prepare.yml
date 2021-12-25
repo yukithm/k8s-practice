@@ -1,0 +1,52 @@
+# https://kubernetes.io/ja/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+
+- name: Disable swap
+  command: swapoff -a
+
+- name: Disable swap in fstab
+  replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    replace: '# \1'
+
+- name: Set sysctl for iptables bridge
+  sysctl:
+    name: "{{ item }}"
+    value: "1"
+    sysctl_set: yes
+    sysctl_file: /etc/sysctl.d/k8s.conf
+    state: present
+    reload: yes
+  with_items:
+    - net.bridge.bridge-nf-call-iptables
+    - net.bridge.bridge-nf-call-ip6tables
+  tags:
+    - k8s_os_condition
+
+- name: Ensure br_netfilter kernel module is loaded
+  modprobe:
+    name: br_netfilter
+    state: present
+  tags:
+    - k8s_os_condition
+
+- name: Install legacy iptables
+  apt:
+    name:
+      - iptables
+      - arptables
+      - ebtables
+  tags:
+    - k8s_os_condition
+
+- name: Switch from nftables backend to iptables
+  community.general.alternatives:
+    name: "{{ item }}"
+    path: "/usr/sbin/{{ item }}-legacy"
+  with_items:
+    - iptables
+    - ip6tables
+    - arptables
+    - ebtables
+  tags:
+    - k8s_os_condition
