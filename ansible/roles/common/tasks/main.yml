@@ -1,4 +1,4 @@
-- name: update all packages
+- name: Update all packages
   apt:
     upgrade: yes
     update_cache: yes
@@ -6,7 +6,7 @@
   tags:
     - packages
 
-- name: install basic tools
+- name: Install basic tools
   apt:
     name: "{{ item }}"
     state: present
@@ -19,3 +19,12 @@
     - wget
   tags:
     - packages
+
+- name: Install yq
+  import_tasks: yq.yml
+  tags:
+    - packages
+
+- name: Set timezone
+  timezone:
+    name: "{{ timezone }}"

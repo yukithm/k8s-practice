@@ -1,0 +1,15 @@
+- name: Add yq apt key
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: CC86BB64
+    state: present
+
+- name: Add yq apt repository
+  apt_repository:
+    repo: ppa:rmescandon/yq
+    state: present
+
+- name: Install yq
+  apt:
+    name: yq
+    state: present
