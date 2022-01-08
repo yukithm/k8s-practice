@@ -9,6 +9,7 @@
     # 10250       Kubelet API
     # 30000:32767 NodePort Service
     - "10250,30000:32767"
+    - 179          # Calico BGP
   tags:
     - k8s_os_condition
 

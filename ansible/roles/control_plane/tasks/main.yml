@@ -12,6 +12,7 @@
     # 10251        kube-scheduler
     # 10252        kube-controller-manager
     - "6443,2379:2380,10250:10252"
+    - 179          # Calico BGP
   tags:
     - k8s_os_condition
 
