@@ -1,6 +1,6 @@
 vagrant_shared_dir: /vagrant
 vm_shared_dir: "{{ vagrant_shared_dir }}/shared"
-
+vm_network_interface: enp0s8
 
 timezone: Asia/Tokyo
 

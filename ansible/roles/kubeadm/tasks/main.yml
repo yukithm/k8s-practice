@@ -19,6 +19,21 @@
   tags:
     - kubeadm
 
+- name: Get node IP address
+  shell: ip addr show {{ vm_network_interface }} | grep inet | grep -v inet6 | awk '{print $2}' | cut -f1 -d/
+  register: ip_addr
+  changed_when: false
+  tags:
+    - kubeadm
+
+- name: Add kubelet environment file
+  lineinfile:
+    path: /etc/default/kubelet
+    create: yes
+    line: KUBELET_EXTRA_ARGS=--node-ip={{ ip_addr.stdout }}
+  tags:
+    - kubeadm
+
 - name: Install kubelet, kubeadm and kubectl 
   apt:
     name:
