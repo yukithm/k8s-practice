@@ -75,6 +75,6 @@
       alias {{ kubectl_alias }}=kubectl
       complete -F __start_kubectl {{ kubectl_alias }}
     create: yes
-    owner: "{{ ansible_user | default(ansible_user_id) }}"
-    group: "{{ ansible_user | default(ansible_user_id) }}"
+    owner: vagrant
+    group: vagrant
     mode: 0644

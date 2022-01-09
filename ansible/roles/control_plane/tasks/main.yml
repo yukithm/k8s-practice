@@ -46,21 +46,21 @@
 
 - name: Create Kubernetes config directory
   file:
-    path: ".kube/"
-    owner: "{{ ansible_user | default(ansible_user_id) }}"
-    group: "{{ ansible_user | default(ansible_user_id) }}"
+    path: "/home/vagrant/.kube/"
+    owner: vagrant
+    group: vagrant
     mode: 0755
     state: directory
   tags:
     - k8s_cluster
 
-- name: Copy admin.conf to Home directory
+- name: Copy admin.conf to ~/.kube/config
   when: k8s_init_cluster is succeeded
   copy:
     src: /etc/kubernetes/admin.conf
-    dest: ".kube/config"
-    owner: "{{ ansible_user | default(ansible_user_id) }}"
-    group: "{{ ansible_user | default(ansible_user_id) }}"
+    dest: "/home/vagrant/.kube/config"
+    owner: vagrant
+    group: vagrant
     mode: 0644
     remote_src: true
   tags:
@@ -91,3 +91,15 @@
   tags:
     - k8s_cluster
     - join
+
+- name: Put kube config file into shared folder
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: "{{ vm_shared_dir }}/kube_config"
+    owner: "{{ ansible_user | default(ansible_user_id) }}"
+    group: "{{ ansible_user | default(ansible_user_id) }}"
+    mode: 0644
+    remote_src: true
+  tags:
+    - k8s_cluster
+    - config

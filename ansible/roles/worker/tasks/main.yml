@@ -46,3 +46,24 @@
   when: not kubelet_ca.stat.exists
   tags:
     - k8s_cluster
+
+- name: Create Kubernetes config directory
+  file:
+    path: "/home/vagrant/.kube/"
+    owner: vagrant
+    group: vagrant
+    mode: 0755
+    state: directory
+  tags:
+    - k8s_cluster
+
+- name: Copy kube_config to ~/.kube/config
+  copy:
+    src: "{{ vm_shared_dir }}/kube_config"
+    dest: "/home/vagrant/.kube/config"
+    owner: vagrant
+    group: vagrant
+    mode: 0644
+    remote_src: true
+  tags:
+    - k8s_cluster
