@@ -15,6 +15,7 @@ Vagrantとkubeadmを使った勉強用のKubernetesクラスター構築セッ�
 - ユーティリティ
   - `kubectl`設定済み
   - `kubectl`のcompletion設定済み
+  - `alias k=kubectl`設定済み（completionも設定済み）
   - `jq`, `yq`インストール済み
 
 IPアドレスは決め打ちで設定済み。変更したい場合は`Vagrantfile`と`ansible/*`の該当箇所を探して変更する。

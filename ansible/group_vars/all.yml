@@ -19,5 +19,7 @@ docker_users:
 kubernetes_version: 1.21.8
 kubernetes_package_version: 1.21.8-00
 
+kubectl_alias: k
+
 kubeadm_join_params_json: "{{ vm_shared_dir }}/kubeadm-join-params.json"
 control_plane_address: 192.168.56.161

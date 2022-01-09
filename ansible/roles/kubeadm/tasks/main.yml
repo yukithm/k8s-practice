@@ -66,3 +66,15 @@
   when: not kubectl_completion.stat.exists
   tags:
     - kubeadm
+
+- name: Set an alias for kubectl
+  when: (kubectl_alias is defined) and (kubectl_alias|length > 0)
+  blockinfile:
+    path: /home/vagrant/.bash_aliases
+    block: |
+      alias {{ kubectl_alias }}=kubectl
+      complete -F __start_kubectl {{ kubectl_alias }}
+    create: yes
+    owner: "{{ ansible_user | default(ansible_user_id) }}"
+    group: "{{ ansible_user | default(ansible_user_id) }}"
+    mode: 0644
