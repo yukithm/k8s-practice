@@ -1,0 +1,5 @@
+- name: Export NFS
+  command: exportfs -ra
+  become: yes
+  tags:
+    - nfs

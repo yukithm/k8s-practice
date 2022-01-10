@@ -4,6 +4,7 @@
   become: yes
   roles:
     - common
+    - nfs-server
     - geerlingguy.docker
     - kubeadm
     - control_plane

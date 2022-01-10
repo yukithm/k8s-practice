@@ -1,0 +1,4 @@
+nfs_server_addr: 192.168.56.161
+nfs_server_dir: /var/nfs
+nfs_mount_dir: /mnt/nfs
+nfs_mount_opts: noauto,nofail,nfsvers=4,tcp,soft,noatime,intr

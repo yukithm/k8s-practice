@@ -13,6 +13,10 @@ Vagrantとkubeadmを使った勉強用のKubernetesクラスター構築セッ�
 - network: Calico
 - service-cidr: `10.96.0.0/12`
 - pod-network-cidr: `10.224.0.0/16`
+- NFS
+  - control-planeの`/var/nfs`がエクスポートされる
+  - worker側は`/etc/fstab`で`/mnt/nfs`にマウントする設定を書いてあるが、`noauto`で自動マウントしないようにしてある
+    - マウント不要だし、トラブルの元なので、必要があるときだけ手動マウントする
 - ユーティリティ
   - `kubectl`設定済み
   - `kubectl`のcompletion設定済み

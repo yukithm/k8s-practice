@@ -4,6 +4,7 @@
   become: yes
   roles:
     - common
+    - nfs-client
     - geerlingguy.docker
     - kubeadm
     - worker

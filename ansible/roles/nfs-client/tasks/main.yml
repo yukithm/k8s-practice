@@ -1,0 +1,23 @@
+- name: Install nfs-client
+  apt:
+    name: nfs-common
+    state: present
+  tags:
+    - nfs
+
+- name: Prepare NFS mount directory
+  file:
+    path: "{{ nfs_mount_dir }}"
+    owner: root
+    group: root
+    mode: 755
+    state: directory
+  tags:
+    - nfs
+
+- name: Add NFS mount definition
+  lineinfile:
+    path: /etc/fstab
+    line: "{{ nfs_server_addr }}:{{ nfs_server_dir}} {{ nfs_mount_dir }} nfs {{ nfs_mount_opts }} 0 0"
+  tags:
+    - nfs
