@@ -63,7 +63,7 @@
     dest: "/home/vagrant/.kube/config"
     owner: vagrant
     group: vagrant
-    mode: 0644
+    mode: 0600
     remote_src: true
   tags:
     - k8s_cluster
