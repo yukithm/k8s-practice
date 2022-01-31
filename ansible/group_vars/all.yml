@@ -16,8 +16,8 @@ docker_daemon_options:
 docker_users:
   - vagrant
 
-kubernetes_version: 1.21.8
-kubernetes_package_version: 1.21.8-00
+kubernetes_version: 1.22.5
+kubernetes_package_version: 1.22.5-00
 
 kubectl_alias: k
 

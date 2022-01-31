@@ -10,6 +10,7 @@ KrewとかHelmとか便利ツール類は自分で入れること。
 
 ## 出来上がる環境
 
+- Kubernetes: v1.22.5
 - control plane: 1 node
     - `192.168.56.161`
     - taintは解除していない
