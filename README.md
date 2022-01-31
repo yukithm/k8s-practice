@@ -70,6 +70,18 @@ vagrant ssh worker2
 
 気にせず終了してもいいが、環境を再開する予定があるなら`vagrant suspend`で休止状態にするほうが良いかもしれない。
 
+## 試験の情報
+
+試験環境のKubernetesバージョンは定期的に更新されるので、受験要項やカリキュラムのページで確認すること。
+
+- [Certified Kubernetes Administrator \(CKA\) \| Cloud Native Computing Foundation](https://www.cncf.io/certification/cka/)
+- [cncf/curriculum: 📚Open Source Curriculum for CNCF Certification Courses](https://github.com/cncf/curriculum)
+- [Training and Certification \- T&C DOCS \(Candidate Facing Resources\)](https://docs.linuxfoundation.org/tc-docs/)
+  - [Linux Foundation Certification Exam: Candidate Handbook \(using PSI ExamsLocal Proctoring platform\) \- T&C DOCS \(Candidate Facing Resources\)](https://docs.linuxfoundation.org/tc-docs/certification/lf-candidate-handbook)
+  - [Important Instructions: CKA and CKAD \- T&C DOCS \(Candidate Facing Resources\)](https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad)
+
+試験におけるKubernetesとetcdのバージョンは[Important Instructions: CKA and CKAD \- T&C DOCS \(Candidate Facing Resources\)](https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad)で確認できる。
+
 ## Tips
 
 → [Tips](tips.md)
